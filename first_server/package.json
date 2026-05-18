@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.8.0",
+    "tsx": "^4.22.1",
+    "typescript": "^6.0.3"
+  },
+  "name": "first_server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx watch src/index.ts"
+  },
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "esbuild": "^0.28.0",
+    "express": "^5.2.1",
+    "undici-types": "^7.24.6"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
