@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@types/node": "^25.8.0",
+    "tsx": "^4.22.1"
+  },
+  "name": "first",
+  "version": "1.0.0",
+  "type": "module"
+}
