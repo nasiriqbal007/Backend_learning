@@ -7,16 +7,15 @@ import {
   deleteTask,
 } from "../controllers/taskController.js";
 import { Router } from "express";
+import { validateTask } from "../middleware/validateTask.js";
+import { validateId } from "../middleware/validateId.js";
 const router = Router();
 
-router.get("/", (req, res) => {
-  res.json({ message: "Welcome to the Todo API" });
-});
 router.get("/", getAllTasks);
-router.post("/", addTask);
-router.get("/:id", getTaskById);
-router.patch("/:id", updateTaskPartial);
-router.put("/:id", updateTask);
-router.delete("/:id", deleteTask);
+router.post("/", validateTask, addTask);
+router.get("/:id", validateId, getTaskById);
+router.patch("/:id", validateId, updateTaskPartial);
+router.put("/:id", validateId, validateTask, updateTask);
+router.delete("/:id", validateId, deleteTask);
 
 export default router;

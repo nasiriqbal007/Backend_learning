@@ -1,11 +1,12 @@
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs/promises";
-import type { Task } from "../../types/Task.js";
+import type { Task } from "../../types/Task";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dbPath = path.join(__dirname, "../db/tasks.json");
+const dbPath = path.join(__dirname, "../../db/tasks.json");
+console.log("dbPath:", dbPath);
 
 export const readTasks = async (): Promise<Task[]> => {
   try {

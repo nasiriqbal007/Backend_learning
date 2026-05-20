@@ -1,35 +1,37 @@
 import { type Request, type Response } from "express";
 import { readTasks, writeTasks } from "../services/dbService.js";
 import type { Task } from "../../types/Task.js";
+import { handleResponse, handleError } from "../utils/response.js";
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await readTasks();
-    res.json(tasks);
+    if (tasks.length === 0) {
+      return handleResponse(res, 200, [], "No tasks found");
+    }
+    handleResponse(res, 200, tasks, "Tasks found");
   } catch (error) {
-    res.status(500).json({ message: "server internal error" });
+    return handleError(res, 500);
   }
 };
 
 export const addTask = async (req: Request, res: Response) => {
   try {
     const { title, priority, completed } = req.body;
-    if (!title || !priority) {
-      return res
-        .status(400)
-        .json({ message: "Title and priority are required" });
-    }
+
     const tasks = await readTasks();
+
     const newTask: Task = {
-      id: tasks.length + 1,
+      id: tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1,
       title,
       priority,
       completed,
     };
+
     tasks.push(newTask);
     await writeTasks(tasks);
-    res.status(201).json(newTask);
+    handleResponse(res, 201, newTask, "Task created");
   } catch (error) {
-    res.status(500).json({ message: "server internal error" });
+    handleError(res, 500);
   }
 };
 export const getTaskById = async (req: Request, res: Response) => {
@@ -37,13 +39,13 @@ export const getTaskById = async (req: Request, res: Response) => {
     const tasks = await readTasks();
     const id = Number(req.params.id);
     const findTask = tasks.find((t) => t.id === id);
-    if (findTask) {
-      res.json(findTask);
+    if (!findTask) {
+      return handleError(res, 404, "Task not found");
     } else {
-      res.status(404).json({ message: "not found" });
+      return handleResponse(res, 200, findTask, "Task found");
     }
   } catch (error) {
-    res.status(500).json({ message: "server internal error" });
+    handleError(res, 500);
   }
 };
 export const updateTask = async (req: Request, res: Response) => {
@@ -52,9 +54,8 @@ export const updateTask = async (req: Request, res: Response) => {
     const { title, priority, completed } = req.body;
     const id = Number(req.params.id);
     const taskIndex = tasks.findIndex((t) => t.id === id);
-    if (taskIndex == -1) {
-      res.status(404).json({ message: "Task not found" });
-      return;
+    if (taskIndex === -1) {
+      return handleError(res, 404, "Task not found");
     }
     tasks[taskIndex] = {
       ...tasks[taskIndex],
@@ -64,9 +65,9 @@ export const updateTask = async (req: Request, res: Response) => {
       completed,
     };
     await writeTasks(tasks);
-    res.json(tasks[taskIndex]);
+    return handleResponse(res, 200, tasks[taskIndex], "Task updated");
   } catch {
-    res.status(500).json({ message: "server internal error" });
+    return handleError(res, 500);
   }
 };
 export const updateTaskPartial = async (req: Request, res: Response) => {
@@ -76,8 +77,7 @@ export const updateTaskPartial = async (req: Request, res: Response) => {
     const taskIndex = tasks.findIndex((t) => t.id === id);
 
     if (taskIndex === -1) {
-      res.status(404).json({ message: "Task not found" });
-      return;
+      return handleError(res, 404, "Task not found");
     }
 
     tasks[taskIndex] = {
@@ -86,9 +86,9 @@ export const updateTaskPartial = async (req: Request, res: Response) => {
     };
 
     await writeTasks(tasks);
-    res.json(tasks[taskIndex]);
+    return handleResponse(res, 200, tasks[taskIndex], "Task updated");
   } catch (error) {
-    res.status(500).json({ message: "server internal error" });
+    handleError(res, 500);
   }
 };
 
@@ -98,13 +98,12 @@ export const deleteTask = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const findIndex = tasks.findIndex((i) => i.id === id);
     if (findIndex == -1) {
-      res.status(404).json({ message: "not found" });
-      return;
+      return handleError(res, 404, "Task not found");
     }
     tasks.splice(findIndex, 1);
     await writeTasks(tasks);
-    res.json({ message: `task deleted ${findIndex}` });
+    return handleResponse(res, 204, "task deleted");
   } catch (error) {
-    res.status(500).json({ message: "server internal error" });
+    return handleError(res, 500);
   }
 };
