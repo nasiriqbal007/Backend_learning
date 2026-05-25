@@ -19,7 +19,7 @@ export const addMovie = async (movie: Movie): Promise<Movie> => {
     movie.ratings,
   ];
   const res = await pool.query(
-    "INSERT INTO movies (title, description, releaseDate, ratings) VALUES ($1, $2, $3, $4) RETURNING *",
+    "INSERT INTO movies (title, description, release_date, ratings) VALUES ($1, $2, $3, $4) RETURNING *",
     movieData,
   );
   return res.rows[0];
@@ -30,11 +30,11 @@ export const updateMovie = async (
   title: string,
   description: string,
   rating: number,
-  releaseYear: string,
+  releaseDate: string,
 ): Promise<Movie> => {
   const res = await pool.query(
-    " UPDATE movies SET title=$1, description=$2, ratings=$3, releaseDate=$4 WHERE id=$5, RETURNING *",
-    [title, description, rating, releaseYear, id],
+    "UPDATE movies SET title=$1, description=$2, ratings=$3, release_date=$4 WHERE id=$5 RETURNING *",
+    [title, description, rating, releaseDate, id],
   );
   return res.rows[0];
 };
