@@ -1,10 +1,15 @@
 import express from "express";
 import { port, NODE_ENV } from "./config/db";
 import movieRouter from "./routes/routes";
+import authRouter from "./routes/authRoutes";
 
 const app = express();
 
 app.use(express.json());
+
+
+app.use("/api/auth", authRouter);
+
 
 app.use("/api/movies", movieRouter);
 
