@@ -5,13 +5,15 @@ import { AppError, BadRequestError } from "../errors/AppError";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password, name } = req.body;
+    if (name === undefined || name.trim() === "") {
+      throw new BadRequestError("Name is required");
+    }
     if (!email || !password) {
       throw new BadRequestError("Email and password are required");
     }
 
-    const { user, token } = await registerUser(email, password);
+    const { user, token } = await registerUser(email, password, name);
 
     sendResponse(res, 201, { user, token });
   } catch (error) {

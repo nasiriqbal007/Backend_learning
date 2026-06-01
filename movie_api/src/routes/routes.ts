@@ -16,7 +16,7 @@ const movieRouter = Router();
 
 movieRouter.get("/", getMovies);
 
-movieRouter.get("/:id", validateMovieId, getMovieById);
+movieRouter.get("/:id", authMiddleware, validateMovieId, getMovieById);
 
 movieRouter.post("/", authMiddleware, validateMovieData, addMovie);
 

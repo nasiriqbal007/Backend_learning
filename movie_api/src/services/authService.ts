@@ -9,19 +9,17 @@ const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret-key";
 export const registerUser = async (
   email: string,
   password: string,
+  name: string,
 ): Promise<{ user: User; token: string }> => {
-  
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
     throw new BadRequestError("Email already registered");
   }
 
-  
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await createUser(email, hashedPassword);
+  const user = await createUser(email, hashedPassword, name);
 
-  
   const token = jwt.sign(
     { id: user.id, email: user.email } as JwtPayload,
     JWT_SECRET,
@@ -35,7 +33,6 @@ export const loginUser = async (
   email: string,
   password: string,
 ): Promise<{ user: User; token: string }> => {
-
   const user = await getUserByEmail(email);
   if (!user) {
     throw new BadRequestError("Invalid email or password");
@@ -46,7 +43,6 @@ export const loginUser = async (
     throw new BadRequestError("Invalid email or password");
   }
 
-  
   const token = jwt.sign(
     { id: user.id, email: user.email } as JwtPayload,
     JWT_SECRET,

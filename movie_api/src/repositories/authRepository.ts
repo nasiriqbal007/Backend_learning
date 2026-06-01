@@ -4,10 +4,11 @@ import type { User } from "../models/User";
 export const createUser = async (
   email: string,
   hashedPassword: string,
+  name: string,
 ): Promise<User> => {
   const res = await pool.query(
-    "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-    [email, hashedPassword],
+    "INSERT INTO users (email, password,name) VALUES ($1, $2, $3) RETURNING *",
+    [email, hashedPassword, name],
   );
   return res.rows[0];
 };
