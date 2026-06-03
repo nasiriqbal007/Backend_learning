@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response) => {
     if (error instanceof AppError) {
       return handleError(res, error.statusCode, error.message);
     }
-    handleError(res, 500, "Internal server error");
+    handleError(res,500, AppError.SERVER_ERROR);
   }
 };
 

@@ -35,7 +35,7 @@ export const loginUser = async (
 ): Promise<{ user: User; token: string }> => {
   const user = await getUserByEmail(email);
   if (!user) {
-    throw new BadRequestError("Invalid email or password");
+    throw new BadRequestError("User not found");
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);

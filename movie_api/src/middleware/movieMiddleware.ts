@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { BadRequestError } from "../errors/AppError";
+import { AppError, BadRequestError } from "../errors/AppError";
 
 export const validateMovieId = (
   req: Request,
@@ -29,7 +29,7 @@ export const validateMovieData = (
     typeof description !== "string" ||
     description.trim() === ""
   ) {
-    throw new BadRequestError("Description is required");
+    throw new BadRequestError();
   }
 
   if (
