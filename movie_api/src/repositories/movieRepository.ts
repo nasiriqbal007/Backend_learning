@@ -1,4 +1,5 @@
 import { pool } from "../config/db";
+import { ServerError } from "../errors/AppError";
 import type { Movie } from "../models/movieModel";
 
 export const getAllMovies = async () => {
@@ -29,15 +30,24 @@ export const updateMovie = async (
   id: number,
   title: string,
   description: string,
-  rating: number,
+  ratings: number,
   releaseDate: string,
 ): Promise<Movie> => {
-  const res = await pool.query(
-    "UPDATE movies SET title=$1, description=$2, ratings=$3, release_date=$4 WHERE id=$5 RETURNING *",
-    [title, description, rating, releaseDate, id],
-  );
-  return res.rows[0];
+  try {
+    const res = await pool.query(
+      "UPDATE movies SET title=$1, description=$2, ratings=$3, release_date=$4 WHERE id=$5 RETURNING *",
+      [title, description, ratings, releaseDate, id],
+    );
+    return res.rows[0];
+  } catch (error) {
+    throw new ServerError(`this is the error coming form here `);
+  }
 };
 export const deleteMovie = async (id: number) => {
+  try {
+    
+  } catch (error) {
+    
+  }
   await pool.query("DELETE FROM movies WHERE id=$1", [id]);
 };

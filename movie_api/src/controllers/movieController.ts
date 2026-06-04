@@ -24,7 +24,8 @@ export const getMovies = async (_: Request, res: Response) => {
 export const addMovie = async (req: Request, res: Response) => {
   try {
     const movie = req.body;
-    const newMovie = await createMovie(movie);
+    const userId = (req as any).userId;
+    const newMovie = await createMovie(movie, userId);
     sendResponse(res, 201, newMovie);
   } catch (error) {
     if (error instanceof AppError) {
@@ -50,14 +51,18 @@ export const getMovieById = async (req: Request, res: Response) => {
 export const updateMovie = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const { title, description, rating, releaseDate } = req.body;
+    const { title, description, ratings, releaseDate } = req.body;
+    const ratingValue = typeof ratings === "number" ? ratings : req.body.rating;
+    const userId = (req as any).userId;
     const updatedMovie = await editMovie(
       id,
       title,
       description,
-      rating,
+      ratingValue,
       releaseDate,
+      userId,
     );
+
     sendResponse(res, 200, updatedMovie);
   } catch (error) {
     if (error instanceof AppError) {
@@ -70,7 +75,10 @@ export const updateMovie = async (req: Request, res: Response) => {
 export const deleteMovie = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    await removeMovie(id);
+    const userId = (req as any).userId;
+
+    
+    await removeMovie(id, userId);
     sendResponse(res, 200, "movie deleted");
   } catch (error) {
     if (error instanceof AppError) {

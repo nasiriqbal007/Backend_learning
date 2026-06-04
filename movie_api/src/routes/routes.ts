@@ -9,6 +9,7 @@ import {
 import {
   validateMovieData,
   validateMovieId,
+  validateMovieUpdateData,
 } from "../middleware/movieMiddleware";
 import { authMiddleware } from "../middleware/authMiddleware";
 
@@ -24,7 +25,7 @@ movieRouter.patch(
   "/:id",
   authMiddleware,
   validateMovieId,
-  validateMovieData,
+  validateMovieUpdateData,
   updateMovie,
 );
 

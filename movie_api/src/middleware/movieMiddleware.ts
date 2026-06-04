@@ -39,13 +39,8 @@ export const validateMovieData = (
   ) {
     throw new BadRequestError("Release date is required and must be valid");
   }
-
-  if (
-    ratings === undefined ||
-    typeof ratings !== "number" ||
-    ratings < 0 ||
-    ratings > 10
-  ) {
+  const rating = Number(ratings);
+  if (isNaN(rating) || rating < 0 || rating > 10) {
     throw new BadRequestError("Ratings must be a number between 0 and 10");
   }
 
@@ -74,9 +69,9 @@ export const validateMovieUpdateData = (
       throw new BadRequestError("Release date must be valid");
     }
   }
-
-  if (ratings !== undefined) {
-    if (typeof ratings !== "number" || ratings < 0 || ratings > 10) {
+  const rating = Number(ratings);
+  if (rating !== undefined) {
+    if (isNaN(rating) || rating < 0 || rating > 10) {
       throw new BadRequestError("Ratings must be a number between 0 and 10");
     }
   }

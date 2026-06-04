@@ -23,6 +23,7 @@ export const authMiddleware = (
     const decoded = verifyToken(token);
     req.userId = decoded.id;
     req.userEmail = decoded.email;
+   
 
     next();
   } catch (error) {
